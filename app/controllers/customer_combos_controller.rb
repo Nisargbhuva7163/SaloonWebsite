@@ -8,29 +8,32 @@ class CustomerCombosController < ApplicationController
   end
 
   def select_customer
-    if params[:customer_ids].present?
-          session[:selected_customer_ids] = params[:customer_ids]
+    if params[:customer_id].present?
+          session[:selected_customer_id] = params[:customer_id]
           redirect_to assign_combo_customer_combos_path
-        else
+    else
           redirect_to customer_combos_path, alert: "Please select at least one customer"
-        end
+    end
   end
 
   def assign_combo
-    @customers = Customer.where(id: session[:selected_customer_ids])
+    @customer = Customer.find_by(id: session[:selected_customer_id])
     @combos = Combo.all
   end
 
   def create
-      combo = Combo.find_by(id: params[:combo_id])
+    combo_ids = params[:combo_ids]
 
-      if combo && @customers.any?
-        @customers.each do |customer|
-          CustomerCombo.create(customer: customer, combo: combo)
+      if combo_ids.present? && @customer
+        combo_ids.each do |combo_id|
+          combo = Combo.find_by(id: combo_id)
+          if combo
+            CustomerCombo.create(customer: @customer, combo: combo)
+          end
         end
 
-        session.delete(:selected_customer_ids)
-        redirect_to customer_combos_path, notice: "Combo assigned to selected customers!"
+        session.delete(:selected_customer_id)
+        redirect_to customer_combos_path, notice: "Combo assigned to selected customer!"
       else
         redirect_to assign_combo_customer_combos_path, alert: "Combo assignment failed."
       end
@@ -40,8 +43,8 @@ class CustomerCombosController < ApplicationController
 
   # Optional: If you need to ensure the customer is selected before performing an action
   def set_selected_customer
-    customer_ids = session[:selected_customer_ids]
-    @customers = Customer.where(id: customer_ids)
-    redirect_to customer_combos_path, alert: "No customers selected." if @customers.blank?
+    customer_id = session[:selected_customer_id]
+    @customer = Customer.find_by(id: customer_id)
+    redirect_to customer_combos_path, alert: "No customers selected." unless @customer
   end
 end
