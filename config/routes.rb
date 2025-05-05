@@ -11,7 +11,15 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   resources :services
+  resources :customer_combos, only: [:index, :create] do
+    collection do
+      post :select_customer    # Step 1: select a customer (radio)
+      get :assign_combo        # Step 2: assign combo to selected customer
+    end
+  end
+
   resources :combos
   resources :customers
+
   root to: "services#new"
 end

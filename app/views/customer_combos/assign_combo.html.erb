@@ -1,0 +1,22 @@
+<h1>Assign Combo to Selected Customers</h1>
+
+<h3>Selected Customers:</h3>
+<ul>
+  <% @customers.each do |customer| %>
+    <li><%= customer.name %> (<%= customer.email %>)</li>
+  <% end %>
+</ul>
+
+<%= form_with url: customer_combos_path, method: :post, local: true do |form| %>
+  <div class="mb-3">
+<% @combos.each do |combo| %>
+      <div>
+<%= radio_button_tag "combo_id", combo.id %>
+        <%= combo.service.name %> - Quantity: <%= combo.quantity %>, Discount: <%= combo.discount %>%
+      </div>
+<% end %>
+  </div>
+
+<!--  <%#= form.hidden_field :customer_id, value: @customer.id %>  Pass the selected customer ID -->-->
+<%= form.submit "Assign Combo", class: "btn btn-primary" %>
+<% end %>
