@@ -16,7 +16,10 @@ Rails.application.routes.draw do
       post :select_customer    # Step 1: select a customer (radio)
       get :assign_combo        # Step 2: assign combo to selected customer
     end
+    resources :redeems, only: [:index]
   end
+
+
 
   resources :combos
   resources :customers
