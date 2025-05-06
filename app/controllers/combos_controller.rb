@@ -1,5 +1,5 @@
 class CombosController < ApplicationController
-  before_action :set_combo, only: [:show, :edit, :update, :destroy]
+  before_action :set_combo, only: [ :show, :edit, :update, :destroy ]
 
   def new
     @combo = Combo.new
@@ -46,6 +46,6 @@ class CombosController < ApplicationController
   end
 
   def combo_params
-    params.require(:combo).permit(:quantity,:service_id ,:discount)
+    params.require(:combo).permit(:quantity, :service_id, :discount)
   end
 end
